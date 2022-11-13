@@ -1,0 +1,16 @@
+{
+  "packageDirectories": [
+    {
+      "path": "core",
+      "default": true
+    },
+    {
+      "path": "examples",
+      "default": false
+    }
+  ],
+  "name": "apex-discoverable-services",
+  "namespace": "",
+  "sfdcLoginUrl": "https://login.salesforce.com",
+  "sourceApiVersion": "55.0"
+}
