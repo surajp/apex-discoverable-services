@@ -1,6 +1,6 @@
 @IsTest
-public with sharing class StrategyResolverTest {
-  private static Apextypeimplementor createMockImpl(
+private class StrategyResolverTest {
+  private static ApextypeImplementor createMockImpl(
     String className,
     String classNamespacePrefix
   ) {
@@ -14,42 +14,27 @@ public with sharing class StrategyResolverTest {
   }
 
   @IsTest
-  private static void itShouldResolveImplForGivenStrategyInner() {
+  private static void itShouldResolveImplForGivenStrategy() {
+    String stripeProviderClassName = 'StrategyResolvTestHelper.StripeProvider';
+    String paypalProviderClassName = 'StrategyResolvTestHelper.PaypalProvider';
+    String methodName = 'getImplementorsForInterface';
+    String stripeStrategy = 'Stripe';
     UniversalMocker uMock = UniversalMocker.mock(
       ApexTypeImplementorSelector.class
     );
     List<ApexTypeImplementor> implList = new List<ApexTypeImplementor>();
-    implList.add(
-      createMockImpl('StrategyResolvTestHelper.StripeProvider', null)
-    );
-    implList.add(
-      createMockImpl('StrategyResolvTestHelper.PaypalProvider', null)
-    );
-    uMock.when('getImplementorsForInterface').thenReturn(implList);
+    implList.add(createMockImpl(stripeProviderClassName, null));
+    implList.add(createMockImpl(paypalProviderClassName, null));
+    uMock.when(methodName).thenReturn(implList);
     ApexTypeImplementorSelector.instance = (ApexTypeImplementorSelector) uMock.createStub();
-    String stripeStrategy = 'Stripe';
     StrategyResolvTestHelper.IPaymentProvider impl = (StrategyResolvTestHelper.IPaymentProvider) StrategyResolver.getImplementationForStrategy(
       StrategyResolvTestHelper.IPaymentProvider.class,
       stripeStrategy
     );
     System.assertEquals(
-      'Processed by Stripe',
+      new StrategyResolvTestHelper.StripeProvider().processPayment(),
       impl.processPayment(),
       'Expected payment provider to be Stripe'
-    );
-  }
-
-  @IsTest
-  private static void itShouldResolveImplForGivenStrategy() {
-    String fedexStrategy = 'Fedex';
-    IShipmentProvider impl = (IShipmentProvider) StrategyResolver.getImplementationForStrategy(
-      IShipmentProvider.class,
-      fedexStrategy
-    );
-    System.assertEquals(
-      'Shipped via Fedex',
-      impl.shipAndGetConfirmation(''),
-      'Expected shipment provider to be Fedex'
     );
   }
 
