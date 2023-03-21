@@ -1,3 +1,4 @@
+@IsTest
 public with sharing class StrategyResolvTestHelper {
   public interface IPaymentProvider extends IDiscoverable {
     String processPayment();
